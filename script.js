@@ -17,8 +17,14 @@ function update() {
     `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日（${WEEKDAYS[now.getDay()]}）`;
 
   // 金曜日まであと何日（getDay() は 日=0 … 金=5 … 土=6）
-  const daysToFriday = (5 - now.getDay() + 7) % 7;
-  fridayEl.textContent = daysToFriday === 0 ? "今日は金曜日！" : `あと ${daysToFriday}日`;
+  const day = now.getDay();
+  if (day === 0 || day === 6) {
+    fridayEl.textContent = "今日はお休み🎉";
+  } else if (day === 5) {
+    fridayEl.textContent = "今日は金曜日！";
+  } else {
+    fridayEl.textContent = `あと ${5 - day}日`;
+  }
 }
 
 update();
