@@ -187,6 +187,27 @@ body {
   color: var(--muted);
 }
 
+/* ===== メモ ===== */
+.memo-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.memo-status:empty {
+  display: none;
+}
+
+.memo-list {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.memo-list li {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap; /* セルの中の改行もそのまま出す */
+}
+
 @media (prefers-color-scheme: dark) {
   .subnet-error {
     color: #ff7b72;

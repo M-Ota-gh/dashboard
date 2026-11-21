@@ -1,3 +1,6 @@
+// メモを読みに行く GAS の URL（デプロイしたウェブアプリの URL を貼る）
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyUJfZNBAJYpTpU1iW27ah55LwiXqTVBDtsFziA93YLcNCbY-k6-P2Q7Iaxc2EQUKoO/exec";
+
 // 時計と日付を表示する
 const clockEl = document.getElementById("clock");
 const dateEl = document.getElementById("date");
@@ -108,3 +111,41 @@ function updateSubnet() {
 
 subnetInput.addEventListener("input", updateSubnet);
 updateSubnet();
+
+// ===== メモ（スプレッドシートから読む） =====
+
+const memoTitle = document.getElementById("memo-title");
+const memoStatus = document.getElementById("memo-status");
+const memoList = document.getElementById("memo-list");
+
+async function loadMemo() {
+  if (!GAS_URL.startsWith("https://")) {
+    memoStatus.textContent = "script.js の GAS_URL に URL を貼ってください";
+    return;
+  }
+
+  try {
+    const res = await fetch(GAS_URL);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    // シートの文字はそのまま文字として出す（HTML としては読ませない）
+    memoTitle.textContent = data.title || "";
+    memoList.replaceChildren(
+      ...items.map((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        return li;
+      })
+    );
+    memoStatus.textContent = items.length === 0 ? "メモはまだありません" : "";
+  } catch (err) {
+    console.error(err);
+    memoStatus.textContent = "メモを読み込めませんでした";
+  }
+}
+
+loadMemo();
