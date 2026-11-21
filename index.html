@@ -21,6 +21,19 @@
           <span class="card-desc">金曜日まで</span>
           <span id="friday" class="info-value">あと -日</span>
         </div>
+
+        <div class="card info-card card-wide">
+          <label class="card-desc" for="subnet-input">サブネット電卓</label>
+          <input id="subnet-input" class="subnet-input" type="text" value="192.168.10.0/24"
+                 placeholder="192.168.10.0/24" inputmode="decimal" autocomplete="off" spellcheck="false">
+          <p id="subnet-error" class="subnet-error" role="alert"></p>
+          <dl id="subnet-result" class="subnet-result">
+            <dt>ネットワークアドレス</dt><dd id="subnet-network">-</dd>
+            <dt>ブロードキャストアドレス</dt><dd id="subnet-broadcast">-</dd>
+            <dt>使える範囲</dt><dd id="subnet-range">-</dd>
+            <dt>台数</dt><dd id="subnet-hosts">-</dd>
+          </dl>
+        </div>
       </div>
     </section>
 
