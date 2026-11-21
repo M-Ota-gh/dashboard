@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダッシュボード</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1 class="title">ダッシュボード</h1>
+
+    <section class="clock-panel" aria-label="現在時刻">
+      <div id="clock" class="clock">--:--:--</div>
+      <div id="date" class="date">----年--月--日（-）</div>
+    </section>
+
+    <section class="links">
+      <h2 class="section-title">よく使うリンク</h2>
+
+      <!-- カードを増やすときは、下の <a class="card"> ... </a> をコピーして貼り付けてください -->
+      <div class="card-grid">
+        <a class="card" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+          <span class="card-name">GitHub</span>
+          <span class="card-desc">コードの管理</span>
+        </a>
+
+        <a class="card" href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer">
+          <span class="card-name">Vercel</span>
+          <span class="card-desc">デプロイ・ホスティング</span>
+        </a>
+
+        <a class="card" href="https://claude.ai/" target="_blank" rel="noopener noreferrer">
+          <span class="card-name">Claude</span>
+          <span class="card-desc">AI アシスタント</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
