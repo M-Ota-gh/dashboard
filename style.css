@@ -117,6 +117,22 @@ body {
   color: var(--muted);
 }
 
+/* ===== 情報カード（リンクではないカード） ===== */
+.info {
+  margin-bottom: 32px;
+}
+
+.info-card:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
+.info-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ===== スマホ向け ===== */
 @media (max-width: 480px) {
   .container {
