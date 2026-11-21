@@ -29,3 +29,82 @@ function update() {
 
 update();
 setInterval(update, 1000);
+
+// ===== サブネット電卓 =====
+
+// "192.168.10.0/24" を読んで、結果を返す。読めないときは { error: "…" } を返す
+function calcSubnet(text) {
+  const match = text.trim().match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
+  if (!match) {
+    return { error: "192.168.10.0/24 のような形で入れてください" };
+  }
+
+  const octets = match.slice(1, 5).map(Number);
+  const prefix = Number(match[5]);
+  if (octets.some((n) => n > 255)) {
+    return { error: "数字は 0〜255 で入れてください" };
+  }
+  if (prefix > 32) {
+    return { error: "/ のあとは 0〜32 で入れてください" };
+  }
+
+  // IP アドレスを 32 ビットの数にする（>>> 0 で符号なしにそろえる）
+  const ip = ((octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3]) >>> 0;
+  const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+  const network = (ip & mask) >>> 0;
+  const broadcast = (network | ~mask) >>> 0;
+  const size = 2 ** (32 - prefix);
+
+  let first, last, hosts;
+  if (prefix === 32) {
+    // 1台だけ
+    first = last = network;
+    hosts = 1;
+  } else if (prefix === 31) {
+    // 2台で直結する特別な使い方（RFC 3021）
+    first = network;
+    last = broadcast;
+    hosts = 2;
+  } else {
+    // ネットワークアドレスとブロードキャストアドレスの2つは使えない
+    first = network + 1;
+    last = broadcast - 1;
+    hosts = size - 2;
+  }
+
+  return {
+    network: toIp(network),
+    broadcast: toIp(broadcast),
+    range: first === last ? toIp(first) : `${toIp(first)} 〜 ${toIp(last)}`,
+    hosts: `${hosts.toLocaleString("ja-JP")}台`,
+  };
+}
+
+function toIp(n) {
+  return [n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join(".");
+}
+
+const subnetInput = document.getElementById("subnet-input");
+const subnetError = document.getElementById("subnet-error");
+const subnetResult = document.getElementById("subnet-result");
+const subnetFields = {
+  network: document.getElementById("subnet-network"),
+  broadcast: document.getElementById("subnet-broadcast"),
+  range: document.getElementById("subnet-range"),
+  hosts: document.getElementById("subnet-hosts"),
+};
+
+function updateSubnet() {
+  const result = calcSubnet(subnetInput.value);
+  const hasError = Boolean(result.error);
+
+  // 入れている途中（空欄）はエラーを出さない
+  subnetError.textContent = hasError && subnetInput.value.trim() !== "" ? result.error : "";
+  subnetResult.classList.toggle("is-empty", hasError);
+  for (const key in subnetFields) {
+    subnetFields[key].textContent = hasError ? "-" : result[key];
+  }
+}
+
+subnetInput.addEventListener("input", updateSubnet);
+updateSubnet();
